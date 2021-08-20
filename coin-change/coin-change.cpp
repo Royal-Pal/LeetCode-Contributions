@@ -1,29 +1,31 @@
 class Solution {
 public:
-    int coinChange(vector<int>& coins, int amt) {
+    int coinChange(vector<int>& coins, int amount) {
         int n = coins.size();
         
-        if(amt == 0) {
+        if(amount == 0) {
             return 0;
         }
         
-        int dp[amt + 1];
+        int dp[amount + 1];
         
         dp[0] = 0;
-        for(int i = 1; i <= amt; i++) {
-            int min_num = INT_MAX;
+        for(int i = 1; i <= amount; i++) {
+            int min_coins = INT_MAX;
+            
             for(int j = 0; j < n; j++) {
-                if(coins[j] <= i) {
-                    int req_coins = 1 + dp[i - coins[j]];
+                if(coins[j] <= i && dp[i - coins[j]] != -1) {
+                    int req_coins = min(min_coins, 1 + dp[i - coins[j]]);
                     
                     if(req_coins != 0) {
-                        min_num = min(min_num, req_coins);
+                        min_coins = min(min_coins, req_coins);
                     }
-                }
+                }    
             }
-            dp[i] = (min_num == INT_MAX) ? -1 : min_num;
+            
+            dp[i] = (min_coins == INT_MAX) ? -1 : min_coins;
         }
         
-        return dp[amt];
+        return dp[amount];
     }
 };
